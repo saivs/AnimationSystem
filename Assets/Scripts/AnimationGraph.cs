@@ -25,8 +25,7 @@ namespace Saivs.Animation
         /// </summary>
         public int ThreadIndex { get; internal set; }
 
-        internal NativeSlice<BoneTransform> TransformsOutput;
-
+        internal NativeSlice<BoneTransform> _transformsOutput;
         private AnimationStream _outputAnimationStream;
         private OutputAnimationNode _outputAnimationNode;
         private GenericBindings _genericBindings;
@@ -54,7 +53,7 @@ namespace Saivs.Animation
 
             for (int i = 0; i < _outputAnimationStream.BoneTransforms.Count; i++)
             {
-                TransformsOutput[i] = _outputAnimationStream.BoneTransforms[i];
+                _transformsOutput[i] = _outputAnimationStream.BoneTransforms[i];
             }
         }
     }

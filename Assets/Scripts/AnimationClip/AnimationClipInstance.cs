@@ -41,7 +41,7 @@ namespace Saivs.Animation
         public void EvaluateSequenceAtTime(AnimationStream animationStream, float time)
         {
             if (_animationClip.IsLooping)
-                time = time % _animationClip.Duration;
+                time %= _animationClip.Duration;
             else
                 time = Mathf.Clamp(time, 0, _animationClip.Duration);
 

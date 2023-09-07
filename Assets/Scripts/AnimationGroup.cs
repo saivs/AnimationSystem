@@ -116,7 +116,7 @@ namespace Saivs.Animation
                     _boneTransformsData[i + startIndex] = skeleton.BonesNodes[i].DefaultTransform;
                 }
 
-                graph.TransformsOutput = _boneTransformsData.Slice(startIndex, bonesCount);
+                graph._transformsOutput = _boneTransformsData.Slice(startIndex, bonesCount);
 
                 startIndex = endIndex;
             }
@@ -133,6 +133,7 @@ namespace Saivs.Animation
         {
             if (_animGraphs.Add(graph))
             {
+                _totalBonesCount += graph.Rig.Skeleton.BoneCount;
                 _isDirty = true;
             }
         }
@@ -141,6 +142,7 @@ namespace Saivs.Animation
         {
             if (_animGraphs.Remove(graph))
             {
+                _totalBonesCount -= graph.Rig.Skeleton.BoneCount;
                 _isDirty = true;
             }
         }

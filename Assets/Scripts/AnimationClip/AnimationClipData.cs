@@ -30,13 +30,12 @@ namespace Saivs.Animation
 
         [SerializeField]
         private AnimationClip _clip;
-
-        [SerializeField][HideInInspector]
-        internal BoneBinding[] _boneBindings;
-        [SerializeField][HideInInspector]
-        internal CurveBinding[] _curveBindings;
-        [SerializeField][HideInInspector]
+        [SerializeField, HideInInspector]
         private AnimationCurve[] _curves;
+        [SerializeField, HideInInspector]
+        internal BoneBinding[] _boneBindings;
+        [SerializeField, HideInInspector]
+        internal CurveBinding[] _curveBindings;
 
         private SimpleAnimationCurve[] _simpleCurves;
     }
