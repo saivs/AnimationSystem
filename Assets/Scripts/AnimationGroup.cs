@@ -32,7 +32,7 @@ namespace Saivs.Animation
 
         private NativeArray<BoneTransform> _boneTransformsData;
         private NativeArray<GCHandle> _gcHandles;
-        private TransformAccessArray _bonesArray;
+        private TransformAccessArray _bonesAccessArray;
 
         private WriteTransformsJob _writeTransformsJob;
         private EvaluateAnimationGroupParallelJob _evaluateAnimationGroupParallelJob;
@@ -59,7 +59,7 @@ namespace Saivs.Animation
             Profiler.BeginSample("AnimationGroup.Evaluate");
 
             JobHandle evaluateHandle = _evaluateAnimationGroupParallelJob.Schedule(_gcHandles.Length, 32);
-            JobHandle writeTransformsHandle = _writeTransformsJob.Schedule(_bonesArray, evaluateHandle);
+            JobHandle writeTransformsHandle = _writeTransformsJob.Schedule(_bonesAccessArray, evaluateHandle);
             writeTransformsHandle.Complete();
 
             Profiler.EndSample();
@@ -106,22 +106,20 @@ namespace Saivs.Animation
             foreach (AnimationGraph graph in _animGraphs)
             {
                 Skeleton skeleton = graph.Rig.Skeleton;
-
                 int bonesCount = skeleton.BoneCount;
-                int endIndex = startIndex + bonesCount;
 
                 for (int i = 0; i < bonesCount; i++)
                 {
-                    bones[i + startIndex] = skeleton.BonesTransforms[i];
-                    _boneTransformsData[i + startIndex] = skeleton.BonesNodes[i].DefaultTransform;
+                    bones[startIndex + i] = skeleton.BonesTransforms[i];
+                    _boneTransformsData[startIndex + i] = skeleton.BonesNodes[i].DefaultTransform;
                 }
 
                 graph._transformsOutput = _boneTransformsData.Slice(startIndex, bonesCount);
 
-                startIndex = endIndex;
+                startIndex += bonesCount;
             }
 
-            _bonesArray = new TransformAccessArray(bones);
+            _bonesAccessArray = new TransformAccessArray(bones);
 
             _writeTransformsJob = new WriteTransformsJob()
             {
@@ -162,8 +160,8 @@ namespace Saivs.Animation
             if (_boneTransformsData.IsCreated)
                 _boneTransformsData.Dispose();
 
-            if (_bonesArray.isCreated)
-                _bonesArray.Dispose();
+            if (_bonesAccessArray.isCreated)
+                _bonesAccessArray.Dispose();
         }
 
         private void OnDestroy()
