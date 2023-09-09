@@ -1,34 +1,31 @@
-using UnityEngine;
+using Unity.Mathematics;
 
 namespace Saivs.Animation
 {
     public struct BoneTransform
     {
-        public bool IsValid;
-        public Vector3 Position;
-        public Quaternion Rotation;
-        public Vector3 Scale;
+        public float4x4 LocalSpaceMatrix => float4x4.TRS(LocalPosition, LocalRotation, LocalScale);
+        public float4x4 MeshSpaceMatrix => float4x4.TRS(MeshSpacePosition, MeshSpaceRotation, MeshSpaceScale);
+
+        public float3 LocalPosition;
+        public quaternion LocalRotation;
+        public float3 LocalScale;
+
+        public float3 MeshSpacePosition;
+        public quaternion MeshSpaceRotation;
+        public float3 MeshSpaceScale;
+
+        public bool IsMeshSpaceTransformDirty; 
 
         public static BoneTransform Null => new BoneTransform()
         {
-            IsValid = false,
-            Position = Vector3.zero,
-            Rotation = Quaternion.identity,
-            Scale = Vector3.one,
+            IsMeshSpaceTransformDirty = false,
+            LocalPosition = float3.zero,
+            LocalRotation = quaternion.identity,
+            LocalScale = float3.zero,
+            MeshSpacePosition = float3.zero,
+            MeshSpaceRotation = quaternion.identity,
+            MeshSpaceScale = float3.zero
         };
-
-        public static BoneTransform Lerp(BoneTransform a, BoneTransform b, float t)
-        {
-            if (!a.IsValid || !b.IsValid)
-                return a;
-
-            BoneTransform result = a;
-
-            result.Position = Vector3.Lerp(a.Position, b.Position, t);
-            result.Rotation = Quaternion.Lerp(a.Rotation, b.Rotation, t);
-            result.Scale = Vector3.Lerp(a.Scale, b.Scale, t);
-
-            return result;
-        }
     }
 }

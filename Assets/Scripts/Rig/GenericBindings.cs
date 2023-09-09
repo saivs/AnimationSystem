@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 
 namespace Saivs.Animation
@@ -53,17 +54,34 @@ namespace Saivs.Animation
                 {
                     Id = new StringHash(boneBinding.BindingName),
                     ParentIndex = FindTransformIndex(boneTransform.parent),
+                    ChildIndexes = GetChildrenIndexes(boneTransform),
                     DefaultTransform = new BoneTransform()
                     {
-                        Position = boneTransform.localPosition,
-                        Rotation = boneTransform.localRotation,
-                        Scale = boneTransform.localScale
+                        LocalPosition = boneTransform.localPosition,
+                        LocalRotation = boneTransform.localRotation,
+                        LocalScale = boneTransform.localScale,
+                        IsMeshSpaceTransformDirty = true
                     }
                 };
             }
 
             RigDefinition result = new RigDefinition();
             result.Skeleton = skeleton;
+
+            return result;
+        }
+
+        private NativeArray<int> GetChildrenIndexes(Transform transform)
+        {
+            if (transform.childCount == 0)
+                return default;
+
+            NativeArray<int> result = new NativeArray<int>(transform.childCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                result[i] = FindTransformIndex(transform.GetChild(i));
+            }
 
             return result;
         }

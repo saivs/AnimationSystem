@@ -51,9 +51,9 @@ namespace Saivs.Animation
         {
             _outputAnimationNode.Evaluate(_outputAnimationStream);
 
-            for (int i = 0; i < _outputAnimationStream.BoneTransforms.Count; i++)
+            for (int i = 0; i < _outputAnimationStream.BonesContainer.Lenght; i++)
             {
-                _transformsOutput[i] = _outputAnimationStream.BoneTransforms[i];
+                _transformsOutput[i] = _outputAnimationStream.BonesContainer[i];
             }
         }
     }

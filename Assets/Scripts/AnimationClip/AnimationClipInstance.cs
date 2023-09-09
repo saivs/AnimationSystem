@@ -49,11 +49,12 @@ namespace Saivs.Animation
 
             KeyfameData keyfameData = new KeyfameData(time, _animationClip.Duration, _animationClip.SampleRate);
 
-            for (int boneIndex = 0; boneIndex < animationStream.BoneTransforms.Count; boneIndex++)
+            for (int boneIndex = 0; boneIndex < animationStream.BonesContainer.Lenght; boneIndex++)
             {
                 int boneMapIndex = _boneBindingMap[boneIndex];
 
-                BoneTransform boneTransform = _rig.Skeleton.BonesNodes[boneIndex].DefaultTransform;
+                ref BoneTransform boneTransform = ref animationStream.BonesContainer[boneIndex];
+                boneTransform = _rig.Skeleton.BonesNodes[boneIndex].DefaultTransform;
 
                 if (boneMapIndex != -1)
                 {
@@ -61,7 +62,7 @@ namespace Saivs.Animation
 
                     if (boneBinding.PositionIndex != -1)
                     {
-                        boneTransform.Position = new Vector3()
+                        boneTransform.LocalPosition = new Vector3()
                         {
                             x = curves[boneBinding.PositionIndex].Evaluate(keyfameData),
                             y = curves[boneBinding.PositionIndex + 1].Evaluate(keyfameData),
@@ -71,7 +72,7 @@ namespace Saivs.Animation
 
                     if (boneBinding.RotationIndex != -1)
                     {
-                        boneTransform.Rotation = new Quaternion()
+                        boneTransform.LocalRotation = new Quaternion()
                         {
                             x = curves[boneBinding.RotationIndex].Evaluate(keyfameData),
                             y = curves[boneBinding.RotationIndex + 1].Evaluate(keyfameData),
@@ -82,7 +83,7 @@ namespace Saivs.Animation
 
                     if (boneBinding.ScaleIndex != -1)
                     {
-                        boneTransform.Scale = new Vector3()
+                        boneTransform.LocalScale = new Vector3()
                         {
                             x = curves[boneBinding.ScaleIndex].Evaluate(keyfameData),
                             y = curves[boneBinding.ScaleIndex + 1].Evaluate(keyfameData),
@@ -90,8 +91,6 @@ namespace Saivs.Animation
                         };
                     }
                 }
-
-                animationStream.BoneTransforms[boneIndex] = boneTransform;
             }
         }
     }

@@ -16,11 +16,7 @@ namespace Saivs.Animation
         public void Execute(int index, TransformAccess transform)
         {
             BoneTransform boneTransform = BoneTransformsData[index];
-
-            if (!boneTransform.IsValid)
-                return;
-
-            transform.SetLocalPositionAndRotation(boneTransform.Position, boneTransform.Rotation);
+            transform.SetLocalPositionAndRotation(boneTransform.LocalPosition, boneTransform.LocalRotation);
         }
     }
 }

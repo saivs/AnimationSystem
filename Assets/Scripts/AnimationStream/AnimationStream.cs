@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Saivs.Animation
 {
@@ -11,28 +10,20 @@ namespace Saivs.Animation
         /// </summary>
         public bool IsStreamValid { get; private set; }
         public RigDefinition Rig { get; private set; }
-
-        public List<BoneTransform> BoneTransforms;
+        public BonesContainer BonesContainer { get; private set; }
 
         public AnimationStream()
         {
-            BoneTransforms = new List<BoneTransform>(50);
+            BonesContainer = new BonesContainer();
         }
 
         public void Init(RigDefinition rig)
         {
             Rig = rig;
 
-            BoneTransforms.Clear();
-
             int boneCount = Rig.Skeleton.BoneCount;
-            if (BoneTransforms.Capacity < boneCount)
-                BoneTransforms.Capacity = boneCount;
 
-            for (int i = 0; i < boneCount; i++)
-            {
-                BoneTransforms.Add(BoneTransform.Null);
-            }
+            BonesContainer.Init(boneCount);
         }
 
         public void MarkAsValid()

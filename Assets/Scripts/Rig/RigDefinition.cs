@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 
 namespace Saivs.Animation
@@ -18,6 +19,7 @@ namespace Saivs.Animation
     {
         public StringHash Id;
         public int ParentIndex;
+        public NativeArray<int> ChildIndexes;     
 
         public BoneTransform DefaultTransform;
     }

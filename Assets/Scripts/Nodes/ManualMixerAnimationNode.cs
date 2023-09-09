@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace Saivs.Animation.Nodes
 {
@@ -67,9 +69,15 @@ namespace Saivs.Animation.Nodes
         {
             if (outputStream.IsStreamValid)
             {
-                for (int boneIndex = 0; boneIndex < outputStream.BoneTransforms.Count; boneIndex++)
+                for (int boneIndex = 0; boneIndex < outputStream.BonesContainer.Lenght; boneIndex++)
                 {
-                    outputStream.BoneTransforms[boneIndex] = BoneTransform.Lerp(outputStream.BoneTransforms[boneIndex], blendStream.BoneTransforms[boneIndex], alpha);
+                    ref BoneTransform outputBoneTransform = ref outputStream.BonesContainer[boneIndex];
+                    ref BoneTransform blendBoneTransform = ref blendStream.BonesContainer[boneIndex];
+
+                    outputStream.SetLocalTRS(boneIndex,
+                        math.lerp(outputBoneTransform.LocalPosition, blendBoneTransform.LocalPosition, alpha),
+                        math.slerp(outputBoneTransform.LocalRotation, blendBoneTransform.LocalRotation, alpha),
+                        math.lerp(outputBoneTransform.LocalScale, blendBoneTransform.LocalScale, alpha));
                 }
             }
         }
